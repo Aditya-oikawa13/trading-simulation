@@ -343,13 +343,28 @@ class TradingAgentsGraph:
             tid = thread_id(company_name, str(trade_date))
             args.setdefault("config", {}).setdefault("configurable", {})["thread_id"] = tid
 
+        print(f"\n{'='*60}")
+        print(f"🚀 STARTING TRADING AGENTS WORKFLOW")
+        print(f"📈 Ticker: {company_name}")
+        print(f"📅 Trade Date: {trade_date}")
+        print(f"🤖 LLM Provider: {self.config.get('llm_provider')}")
+        print(f"🧠 Model: {self.config.get('deep_think_llm')}")
+        print(f"{'='*60}\n")
+
         if self.debug:
             trace = []
             for chunk in self.graph.stream(init_agent_state, **args):
                 if len(chunk["messages"]) == 0:
                     pass
                 else:
-                    chunk["messages"][-1].pretty_print()
+                    msg = chunk["messages"][-1]
+                    # Identify the node name if possible or just print the message
+                    node_name = "Agent"
+                    if hasattr(msg, "name") and msg.name:
+                        node_name = msg.name
+                    
+                    print(f"\n--- [Node Execution: {node_name}] ---")
+                    msg.pretty_print()
                     trace.append(chunk)
             # Streamed chunks are per-node deltas. Merge them so the returned
             # state matches what graph.invoke() yields in the non-debug path.
@@ -357,7 +372,13 @@ class TradingAgentsGraph:
             for chunk in trace:
                 final_state.update(chunk)
         else:
+            print("⏳ Running graph (this may take a few minutes)...")
             final_state = self.graph.invoke(init_agent_state, **args)
+            
+        print(f"\n{'='*60}")
+        print(f"✅ WORKFLOW COMPLETE")
+        print(f"🏁 Final Decision: {final_state.get('final_trade_decision')}")
+        print(f"{'='*60}\n")
 
         # Store current state for reflection.
         self.curr_state = final_state

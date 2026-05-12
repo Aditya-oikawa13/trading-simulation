@@ -26,6 +26,10 @@ def create_portfolio_manager(llm):
 
     def portfolio_manager_node(state) -> dict:
         instrument_context = build_instrument_context(state["company_of_interest"])
+        max_pos_size = 15.0  # Constraint from user instructions
+
+        print(f"\n🧠 [Portfolio Manager] Analyzing transaction proposal for {state['company_of_interest']}...")
+        print(f"⚖️ Risk Constraint: Max Position Size = {max_pos_size}%")
 
         history = state["risk_debate_state"]["history"]
         risk_debate_state = state["risk_debate_state"]
@@ -61,6 +65,9 @@ def create_portfolio_manager(llm):
 
 ---
 
+**Constraint:**
+- **MAX_POSITION_SIZE**: {max_pos_size}% of total portfolio value. All buy orders MUST NOT exceed this size.
+
 Be decisive and ground every conclusion in specific evidence from the analysts.{get_language_instruction()}"""
 
         final_trade_decision = invoke_structured_or_freetext(
@@ -70,6 +77,9 @@ Be decisive and ground every conclusion in specific evidence from the analysts.{
             render_pm_decision,
             "Portfolio Manager",
         )
+
+        print(f"📝 [Portfolio Manager] Final Decision Formulated.")
+        print(f"{'-'*30}\n{final_trade_decision}\n{'-'*30}")
 
         new_risk_debate_state = {
             "judge_decision": final_trade_decision,

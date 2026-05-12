@@ -25,6 +25,8 @@ def create_trader(llm):
         instrument_context = build_instrument_context(company_name)
         investment_plan = state["investment_plan"]
 
+        print(f"\n🤝 [Trader] Converting Research Plan into a Transaction Proposal for {company_name}...")
+
         messages = [
             {
                 "role": "system",
@@ -55,6 +57,8 @@ def create_trader(llm):
             render_trader_proposal,
             "Trader",
         )
+
+        print(f"📊 [Trader] Proposal formulated: {trader_plan[:100]}...")
 
         return {
             "messages": [AIMessage(content=trader_plan)],

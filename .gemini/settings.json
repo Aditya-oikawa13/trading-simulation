@@ -1,0 +1,8 @@
+{
+  "general": {
+    "approvalMode": "auto_edit"
+  },
+  "tools": {
+    "sandbox": "sandbox-exec"
+  }
+}
