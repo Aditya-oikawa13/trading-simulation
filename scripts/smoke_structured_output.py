@@ -23,6 +23,10 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from pathlib import Path
+
+# Add src to path so we can import tradingagents
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from tradingagents.agents.managers.portfolio_manager import create_portfolio_manager
 from tradingagents.agents.managers.research_manager import create_research_manager

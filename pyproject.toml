@@ -36,6 +36,7 @@ dependencies = [
 tradingagents = "cli.main:app"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["tradingagents*", "cli*"]
 
 [tool.setuptools.package-data]

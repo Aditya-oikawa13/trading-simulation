@@ -1,5 +1,11 @@
 import os
+import sys
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Add src to path so we can import tradingagents
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 

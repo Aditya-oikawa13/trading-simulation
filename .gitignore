@@ -218,3 +218,6 @@ __marimo__/
 # Cache
 **/data_cache/
 .tradingagents_local/
+session_logs/
+outputs/
+reports/

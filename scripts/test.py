@@ -1,4 +1,11 @@
+import os
+import sys
+from pathlib import Path
 import time
+
+# Add src to path so we can import tradingagents
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
 from tradingagents.dataflows.y_finance import get_YFin_data_online, get_stock_stats_indicators_window, get_balance_sheet as get_yfinance_balance_sheet, get_cashflow as get_yfinance_cashflow, get_income_statement as get_yfinance_income_statement, get_insider_transactions as get_yfinance_insider_transactions
 
 print("Testing optimized implementation with 30-day lookback:")
