@@ -1,19 +1,29 @@
+import os
+from dotenv import load_dotenv
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 
-# DEFAULT_CONFIG already applies TRADINGAGENTS_* env-var overrides
-# (llm_provider, deep_think_llm, quick_think_llm, backend_url, etc.),
-# so users can switch models or endpoints purely via .env without
-# editing this script. Override individual keys here only when you
-# want a hard-coded value that should ignore the environment.
+# Load environment variables
+load_dotenv()
+
+# Use local directories within the project to avoid permission issues
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOCAL_HOME = os.path.join(BASE_DIR, ".tradingagents_local")
+
 config = DEFAULT_CONFIG.copy()
+config["results_dir"] = os.path.join(LOCAL_HOME, "logs")
+config["data_cache_dir"] = os.path.join(LOCAL_HOME, "cache")
+config["memory_log_path"] = os.path.join(LOCAL_HOME, "memory", "trading_memory.md")
+
+# Stick with OpenRouter but try a different model
+config["llm_provider"] = "openrouter"
+config["deep_think_llm"] = "google/gemini-2.0-flash-001"
+config["quick_think_llm"] = "google/gemini-2.0-flash-001"
 
 # Initialize with custom config
 ta = TradingAgentsGraph(debug=True, config=config)
 
 # forward propagate
-_, decision = ta.propagate("NVDA", "2024-05-10")
+# Use a date that is likely to have data (e.g., yesterday or today)
+_, decision = ta.propagate("AAPL", "2026-05-11")
 print(decision)
-
-# Memorize mistakes and reflect
-# ta.reflect_and_remember(1000) # parameter is the position returns
